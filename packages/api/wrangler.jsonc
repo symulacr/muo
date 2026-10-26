@@ -1,0 +1,85 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "muo-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-03-17",
+  "compatibility_flags": ["nodejs_compat"],
+  "placement": { "mode": "smart" },
+  "keep_names": false,
+  "alias": {
+    "../locales/index.js": "./stub-locales.js",
+    "../wire": "./stub-locales.js",
+    "../../wire": "./stub-locales.js",
+    "../helper/cookie/index.js": "./stub-locales.js",
+    "./router/trie-router/index.js": "./stub-locales.js",
+    "./router/trie-router/router.js": "./stub-locales.js",
+    "../pg-core/columns/enum.js": "./stub-locales.js",
+    "../relations.js": "./stub-locales.js",
+    "./relations.js": "./stub-locales.js",
+    "./query-builders/query.js": "./stub-locales.js",
+    "./query-builders/count.js": "./stub-locales.js",
+    "./query-builders/raw.js": "./stub-locales.js",
+    "./select.js": "./stub-locales.js",
+    "../selection-proxy.js": "./stub-locales.js",
+    "../subquery.js": "./stub-locales.js",
+    "./view.js": "./stub-locales.js",
+    "./columns/all.js": "./stub-locales.js",
+    "./blob.js": "./stub-locales.js",
+    "./custom.js": "./stub-locales.js",
+    "./numeric.js": "./stub-locales.js",
+    "./real.js": "./stub-locales.js"
+  },
+  "vars": {
+    "MUO_CORE_CONTRACT": "0x61c41cD7299fD668c3a7aAE62F12c017fE654Cb0",
+    "CORS_ORIGINS": "https://mezo-upbeat-oracle.vercel.app,http://localhost:3000",
+    // Native Mezo indexer. These are PREPARED DEFAULTS for a testnet deployment;
+    // nothing here is deployed by this change. `MEZO_RPC_URL` and
+    // `INDEXER_ADMIN_SECRET` are intentionally NOT set as vars: put the RPC URL
+    // in a secret/vars entry for the target environment and set the admin
+    // secret with `wrangler secret put INDEXER_ADMIN_SECRET`.
+    //
+    // Leaving MEZO_CHAIN_ID / MEZO_CORE_ADDRESS unset makes /v2/* answer 503
+    // "native_index_not_configured" rather than a healthy-looking empty 200.
+    "MEZO_CHAIN_ID": "31611",
+    "MEZO_CORE_ADDRESS": "0x61c41cd7299fd668c3a7aae62f12c017fe654cb0",
+    "MEZO_START_BLOCK": "16380473",
+    "MEZO_CONFIRMATIONS": "12",
+    "MEZO_MAX_BLOCKS_PER_RUN": "500"
+  },
+  "secrets": {
+    // The v1 Stacks write routes are retired (410). These two are no longer read
+    // by any handler; they are left declared so an existing deployment keeps
+    // booting while they are removed operationally. `INDEXER_ADMIN_SECRET` is
+    // the only secret the native surface needs, and it is set per environment
+    // with `wrangler secret put` (never as a var).
+    "required": []
+  },
+  // Scheduled indexing is DISABLED: there is no `triggers.crons` entry, so the
+  // `scheduled` handler is never invoked. The handler is implemented and
+  // bounded, but enabling it requires a measured CPU budget first (Workers Free
+  // grants ~10 ms CPU per Cron tick — a measurement gate, not a backfill
+  // budget). Until then, drive ingestion with the authenticated
+  // `POST /v2/indexer/run` controller in bounded slices.
+  "ratelimits": [
+    {
+      "name": "RATE_LIMITER",
+      "namespace_id": "4817",
+      "simple": {
+        "limit": 300,
+        "period": 60
+      }
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "MUO_DB",
+      "database_name": "muo-testnet",
+      "database_id": "f4d53200-7dcb-429b-a7c5-c45d5e749987",
+      "migrations_dir": ".migrations"
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}

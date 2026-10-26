@@ -1,0 +1,22 @@
+{
+  "name": "@muo/sdk",
+  "module": "src/index.ts",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./native": "./src/native.ts"
+  },
+  "scripts": {
+    "test": "bun --no-env-file test"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@types/bun": "catalog:",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@muo/core": "workspace:*",
+    "@muo/utils": "workspace:*",
+    "viem": "2.57.7"
+  }
+}

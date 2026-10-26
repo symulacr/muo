@@ -1,0 +1,24 @@
+{
+  "name": "@muo/event-listener",
+  "module": "src/index.ts",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./native": "./src/native.ts"
+  },
+  "scripts": {
+    "dev": "bun run --hot src/native.ts",
+    "start": "bun run src/native.ts",
+    "test": "bun --no-env-file test"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@types/bun": "catalog:",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@muo/api": "workspace:*",
+    "@muo/sdk": "workspace:*",
+    "hono": "4.13.13"
+  }
+}

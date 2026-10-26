@@ -1,0 +1,24 @@
+{
+  "name": "@muo/core",
+  "module": "src/index.ts",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./assertion": "./src/assertion.ts",
+    "./event": "./src/event.ts",
+    "./app": "./src/app.ts",
+    "./native": "./src/native.ts",
+    "./abi": "./src/abi.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@types/bun": "catalog:",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "scripts": {
+    "test": "bun --no-env-file test"
+  }
+}

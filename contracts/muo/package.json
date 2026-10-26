@@ -1,0 +1,12 @@
+{
+  "name": "@muo/contracts",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node scripts/forge.mjs test",
+    "build:forge": "node scripts/forge.mjs build",
+    "test:forge": "node scripts/forge.mjs test -vvv",
+    "abi:forge": "node scripts/forge.mjs abi"
+  }
+}

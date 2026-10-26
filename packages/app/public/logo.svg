@@ -1,0 +1,22 @@
+<svg
+  width="256"
+  height="256"
+  viewBox="0 0 256 256"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <title>Mezo Upbeat Oracle</title>
+  <path
+    d="M0 25.6C0 11.4615 11.4615 0 25.6 0H230.4C244.538 0 256 11.4615 256 25.6V230.4C256 244.538 244.538 256 230.4 256H25.6C11.4615 256 0 244.538 0 230.4V25.6Z"
+    fill="#FF004D"
+  />
+  <path
+    fill="white"
+    fill-rule="evenodd"
+    d="M30 90H86V166H30Z
+       M44 90H72L58 152Z
+       M100 90H114V152H142V90H156V166H100Z
+       M180 90H216L226 100V156L216 166H180L170 156V100L180 90Z
+       M188 102H208L214 108V148L208 154H188L182 148V108L188 102Z"
+  />
+</svg>

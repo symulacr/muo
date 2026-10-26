@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "lib": ["ESNext"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    // The native e2e test imports the local anvil fixture from
+    // @muo/integration, whose source uses explicit `.ts` specifiers.
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "types": ["bun"]
+  }
+}

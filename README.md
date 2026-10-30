@@ -7,14 +7,16 @@ an allowlisted arbiter decides who wins the pot.
 Price feeds such as Skip Connect and Pyth answer "what is the price?". MUO answers "is this statement true?", for
 facts a contract cannot read itself: reserve audits, cross-chain state, event outcomes, parameter changes.
 
-## Local native implementation complete, public deployments unchanged
+## Mezo-native implementation, deployed to testnet
 
-The Mezo-native implementation is complete and gated **locally** on `submission`. The public deployments listed below are **unchanged** and still run their previously deployed versions.
+The Mezo-native implementation is complete, gated locally, and deployed.
 
-- **Local:** `bun --no-env-file run verify:local` passed as a single invocation — **17/17 steps, 662 aggregate checks, 0 failed** (634 workspace/contract plus 28 Node guard tests). All nine TypeScript configs pass; Biome reports 174 files with zero errors and warnings; both production webpack builds pass; the Workers minified runtime is 132.43 KiB / gzip 41.32 KiB.
-- **Public:** no deployment, migration or public-chain transaction has been performed. Releasing requires the separate approvals in [ARTIFACT-STAGING.md](docs/ARTIFACT-STAGING.md).
+- **Local:** `bun --no-env-file run verify:local` passed as a single invocation — **17/17 steps, 670 aggregate checks, 0 failed** (642 workspace/contract plus 28 Node guard tests). All nine TypeScript configs pass; Biome reports 174 files with zero errors and warnings; both production webpack builds pass; the Workers minified runtime is 287.15 KiB / gzip 63.00 KiB.
+- **Public:** the portal, landing site and API Worker are deployed on Mezo Testnet. Migration `0003_mezo_native_index` is applied to D1 `muo-testnet`.
 
-Not yet proven: a real browser wallet extension, a live Mezo end-to-end cycle, explorer source verification, and measured Workers CPU for scheduled indexing. See [the implementation record](docs/MEZO-NATIVE-MIGRATION.md) for exact gates and limits.
+The API's assertion list is empty because the chain indexer has never been run: `/v2/status` reports `"state":"never_run"`. Scheduled indexing is deliberately disabled (there is no `triggers.crons` entry) until Workers CPU per tick is measured, so ingestion is driven by the authenticated `POST /v2/indexer/run` controller.
+
+Not yet proven: a real browser wallet extension against live Mezo, a populated index, and explorer source verification. See [the implementation record](docs/MEZO-NATIVE-MIGRATION.md) for exact gates and limits.
 
 ## Live on Mezo Testnet
 
@@ -29,7 +31,7 @@ Not yet proven: a real browser wallet extension, a live Mezo end-to-end cycle, e
 | Events so far | 3 `Asserted`, 1 `Disputed`, 2 `Settled`, 1 `ArbiterAdded` |
 | Landing site | https://mezo-upbeat-oracle-site.vercel.app |
 | Portal | https://mezo-upbeat-oracle.vercel.app |
-| API | https://muo-api.gborlahg.workers.dev ([health](https://muo-api.gborlahg.workers.dev/health)) |
+| API | https://muo-api.k2jodz91zi.workers.dev ([health](https://muo-api.k2jodz91zi.workers.dev/health)) |
 | Pitch deck | [MUO-Pitch-Deck.pdf](https://mezo-upbeat-oracle-site.vercel.app/MUO-Pitch-Deck.pdf) |
 
 Mainnet (chain ID `31612`) uses MUSD `0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186`. MUO is not deployed there yet.

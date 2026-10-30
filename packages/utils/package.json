@@ -1,0 +1,39 @@
+{
+  "name": "@muo/utils",
+  "module": "src/index.ts",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./cn": "./src/cn.ts",
+    "./errors": "./src/errors.ts",
+    "./status": "./src/status.ts",
+    "./ui/button": "./src/ui/button.tsx",
+    "./ui/badge": "./src/ui/badge.tsx",
+    "./ui/sheet": "./src/ui/sheet.tsx",
+    "./ui/tabs": "./src/ui/tabs.tsx",
+    "./native": "./src/native.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:",
+    "@types/react": "19.3.0",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@base-ui/react": "1.9.0",
+    "@hugeicons/core-free-icons": "catalog:",
+    "@hugeicons/react": "catalog:",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "tailwind-merge": "3.7.0",
+    "@muo/core": "workspace:*",
+    "@noble/hashes": "1.8.0"
+  },
+  "peerDependencies": {
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "scripts": {
+    "test": "bun --no-env-file test"
+  }
+}

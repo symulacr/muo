@@ -1,0 +1,104 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "overrides": [
+    {
+      "includes": ["packages/core/src/abi.ts"],
+      "formatter": { "enabled": false }
+    },
+    {
+      "includes": ["theme/theme.css"],
+      "formatter": { "enabled": false }
+    }
+  ],
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "correctness": {
+        "noUnusedVariables": "warn"
+      },
+      "style": {
+        "useImportType": {
+          "fix": "safe",
+          "level": "on",
+          "options": {
+            "style": "separatedType"
+          }
+        }
+      }
+    }
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              { "type": true, "source": [":BUN:", ":NODE:"] },
+              [":BUN:", ":NODE:"],
+              {
+                "type": true,
+                "source": [
+                  ":PACKAGE:",
+                  ":PACKAGE_WITH_PROTOCOL:",
+                  ":URL:",
+                  "!@muo/**"
+                ]
+              },
+              [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:", ":URL:", "!@muo/**"],
+
+              ":BLANK_LINE:",
+
+              { "type": true, "source": "@muo/**" },
+              "@muo/**",
+
+              ":BLANK_LINE:",
+
+              { "type": true, "source": ":ALIAS:" },
+              ":ALIAS:",
+
+              ":BLANK_LINE:",
+
+              { "type": true, "source": "**/__*/**" },
+              "**/__*/**",
+
+              ":BLANK_LINE:",
+
+              { "type": true, "source": ":PATH:" },
+              ":PATH:"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "indentStyle": "space",
+      "indentWidth": 2,
+      "lineWidth": 160,
+      "semicolons": "always",
+      "trailingCommas": "es5"
+    }
+  },
+  "json": {
+    "formatter": {
+      "enabled": true
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+    "defaultBranch": "main"
+  }
+}

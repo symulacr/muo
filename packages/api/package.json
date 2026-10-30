@@ -1,0 +1,29 @@
+{
+  "name": "@muo/api",
+  "type": "module",
+  "exports": {
+    "./app": "./src/app.ts"
+  },
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "test": "bun --no-env-file test",
+    "test:runtime": "node scripts/test-runtime.mjs",
+    "check:mezo": "bun --no-env-file run scripts/check-mezo-readonly.ts"
+  },
+  "dependencies": {
+    "@muo/core": "workspace:*",
+    "@muo/sdk": "workspace:*",
+    "@muo/utils": "workspace:*",
+    "drizzle-orm": "0.45.4",
+    "hono": "4.13.13"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@cloudflare/workers-types": "5.20261023.1",
+    "@muo/integration": "workspace:*",
+    "drizzle-kit": "0.31.11",
+    "viem": "2.57.7",
+    "wrangler": "4.153.0"
+  }
+}

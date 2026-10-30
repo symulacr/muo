@@ -1,0 +1,28 @@
+{
+  "name": "@muo/integration",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./fixture": "./src/fixture.ts",
+    "./rpc": "./src/rpc.ts",
+    "./deploy": "./src/deploy.ts",
+    "./contracts": "./src/contracts.ts"
+  },
+  "dependencies": {
+    "@muo/core": "workspace:*",
+    "@muo/sdk": "workspace:*",
+    "@muo/utils": "workspace:*",
+    "viem": "2.57.7"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:",
+    "typescript": "catalog:"
+  },
+  "scripts": {
+    "test": "node scripts/test.mjs",
+    "test:integration": "bun --no-env-file test --timeout 120000",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

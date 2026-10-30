@@ -1,0 +1,28 @@
+# Pinned, reproducible Foundry configuration for MuoCore.
+#
+# Compiler and EVM target are pinned to the values documented for the deployed
+# Mezo testnet contract (README.md: "Solidity 0.8.28, evmVersion: london,
+# optimizer 200 runs"). Do not change these without re-verifying the deployed
+# bytecode, because a change to any of them changes the compiled output.
+#
+# `bytecode_hash` is deliberately NOT set here. The repository keeps Foundry's
+# default so the metadata hash stays in the bytecode; overriding it to "none"
+# would silently change the compiled bytecode and break any future attempt to
+# reproduce the deployed artifact.
+[profile.default]
+src = "contracts"
+test = "test"
+out = "out"
+cache_path = "cache"
+# No external Solidity dependencies: MuoCore.sol has zero imports and the test
+# suite uses a hand-rolled Vm cheatcode interface plus a local MockMUSD.
+libs = []
+solc_version = "0.8.28"
+evm_version = "london"
+optimizer = true
+optimizer_runs = 200
+
+[fmt]
+line_length = 140
+tab_width = 4
+bracket_spacing = false

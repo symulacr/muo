@@ -1,0 +1,59 @@
+# dependencies (bun install)
+node_modules
+.wrangler
+
+# env files
+.env
+.env.*
+!.env.example
+
+# output
+build
+out
+dist
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+*.log
+report.*.json
+
+# caches
+.cache
+*.tsbuildinfo
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# buildathon track-decision memo (kept locally, not part of the deliverable)
+TRACK.md
+
+# local agent, gate and submission assets (not part of the deliverable)
+.claude/
+gate-fast.sh
+.vitest-cache
+.vite
+MUO-Akindo-Assets/
+/MUO-Pitch-Deck.pdf
+*.mp4
+CLAUDE.md
+llms.txt
+packages/docs/
+
+# editor, tooling and OS leftovers
+.vscode/
+.idea/
+.vercel/
+.turbo/
+.dev.vars
+Thumbs.db
+tmp/
+*.swp
+*.pptx
+
+# local acceptance proof (ignored local evidence, not a release artifact)
+/outputs/

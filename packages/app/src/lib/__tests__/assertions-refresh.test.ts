@@ -8,10 +8,17 @@ const BASE = "http://api.test";
 // rendering React or reaching into internals. The hook spreads
 // `activeAssertionsQuery`, so what is asserted here is what the component uses.
 describe("active-view assertions refresh contract", () => {
-  test("the active view polls on a bounded interval", () => {
+  test("the active view polls on a bounded interval once it has data", () => {
     const active = activeAssertionsQuery(BASE);
-    expect(active.refetchInterval).toBe(ASSERTIONS_REFETCH_INTERVAL_MS);
-    expect(typeof active.refetchInterval).toBe("number");
+    expect(typeof active.refetchInterval).toBe("function");
+    const int = active.refetchInterval as (q: { state: { data: unknown } }) => number | false;
+    expect(int({ state: { data: [] } })).toBe(ASSERTIONS_REFETCH_INTERVAL_MS);
+  });
+
+  test("polling STOPS while the query has no data, so a failure panel cannot flicker", () => {
+    const int = activeAssertionsQuery(BASE).refetchInterval as (q: { state: { data: unknown } }) => number | false;
+    // Every refetch clears `error`; polling a dead API would blank the failure panel.
+    expect(int({ state: { data: undefined } })).toBe(false);
   });
 
   test("the interval is bounded and sane, not a busy loop", () => {

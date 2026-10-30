@@ -121,11 +121,16 @@ export const assertionsQuery = (apiBaseUrl: string) =>
  * rendering React. The hook spreads exactly this, so what the tests pin is what
  * the component actually uses.
  *
+ * Polling only starts once the query HAS data. Every refetch resets `error` to null,
+ * so polling a failing query made the failure panel flicker: visible for a second,
+ * then blank again on each attempt. A dead service is reported once and left alone
+ * until the user presses Retry.
+ *
  * Note what is NOT here: no `setInterval`, no module state, no subscription. The
  * interval is a plain number that TanStack Query turns into a timer owned by the
  * observer's lifecycle, which is why unmounting the view stops the polling.
  */
 export const activeAssertionsQuery = (apiBaseUrl: string) => ({
   ...assertionsQuery(apiBaseUrl),
-  refetchInterval: ASSERTIONS_REFETCH_INTERVAL_MS,
+  refetchInterval: (query: { state: { data: unknown } }) => (query.state.data === undefined ? false : ASSERTIONS_REFETCH_INTERVAL_MS),
 });

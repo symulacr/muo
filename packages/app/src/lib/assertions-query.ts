@@ -108,6 +108,10 @@ export const assertionsQuery = (apiBaseUrl: string) =>
     refetchOnWindowFocus: true,
     // Never poll in the background: a hidden tab must not keep hitting the API.
     refetchIntervalInBackground: false,
+    // One retry, not the default three. Combined with a 5 s poll, three retries made a
+    // dead API oscillate pending -> error -> pending, so the failure panel never stuck
+    // and the list rendered blank with no explanation.
+    retry: 1,
   });
 
 /**

@@ -17,7 +17,7 @@ const ERROR_CLS = "flex w-full flex-col items-center gap-3 rounded-lg border bor
 
 export function AssertionList() {
   const { config, issues } = useAppConfig();
-  const { data: payload, isPending, isError, error, refetch, isFetching } = useAssertions();
+  const { data: payload, isPending, error, refetch, isFetching } = useAssertions();
   const block = useMezoBlock();
   const { data: isArbiter } = useIsArbiter();
   const [openId, setOpenId] = useState<string | null>(null);
@@ -47,7 +47,9 @@ export function AssertionList() {
     );
   }
 
-  if (isError) {
+  // Keyed on the retained error, not on `isError`. A polled query flips back to pending on
+  // every refetch, so `isError` held only briefly and the failure panel disappeared.
+  if (error !== null && payload === undefined) {
     return (
       <div role="alert" className={ERROR_CLS}>
         <p className="font-semibold text-destructive">The assertions could not be loaded.</p>

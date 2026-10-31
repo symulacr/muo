@@ -14,7 +14,7 @@ The Mezo-native implementation is complete, gated locally, and deployed.
 - **Local:** `bun --no-env-file run verify:local` passed as a single invocation — **17/17 steps, 670 aggregate checks, 0 failed** (642 workspace/contract plus 28 Node guard tests). All nine TypeScript configs pass; Biome reports 174 files with zero errors and warnings; both production webpack builds pass; the Workers minified runtime is 287.15 KiB / gzip 63.00 KiB.
 - **Public:** the portal, landing site and API Worker are deployed on Mezo Testnet. Migration `0003_mezo_native_index` is applied to D1 `muo-testnet`.
 
-The API's assertion list is empty because the chain indexer has never been run: `/v2/status` reports `"state":"never_run"`. Scheduled indexing is deliberately disabled (there is no `triggers.crons` entry) until Workers CPU per tick is measured, so ingestion is driven by the authenticated `POST /v2/indexer/run` controller.
+The API now serves indexed chain data: **3 assertions** (1 open, 2 settled) built from 6 applied contract logs. `/v2/status` reports `"state":"ok"` with the cursor at the chain head. Ingestion stays manual and bounded — scheduled indexing is disabled (there is no `triggers.crons` entry) until Workers CPU per tick is measured, so an operator drives `POST /v2/indexer/run` with `INDEXER_ADMIN_SECRET`.
 
 Not yet proven: a real browser wallet extension against live Mezo, a populated index, and explorer source verification. See [the implementation record](docs/MEZO-NATIVE-MIGRATION.md) for exact gates and limits.
 

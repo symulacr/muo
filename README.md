@@ -16,7 +16,7 @@ The Mezo-native implementation is complete, gated locally, and deployed.
 
 The API now serves indexed chain data: **3 assertions** (1 open, 2 settled) built from 6 applied contract logs. `/v2/status` reports `"state":"ok"` with the cursor at the chain head. Scheduled indexing is **enabled** at `*/1 * * * *` (`triggers.crons` in `wrangler.jsonc`); each tick is one bounded cycle, capped by `maxBlocksPerRun`. Measured cost on catch-up ticks spanning the full 500 blocks was 9–11 ms CPU with `outcome: ok`, and steady state is ~15 blocks. A manual `POST /v2/indexer/run` remains available with `INDEXER_ADMIN_SECRET` for backfills.
 
-Not yet proven: a real browser wallet extension against live Mezo, a populated index, and explorer source verification. See [the implementation record](docs/MEZO-NATIVE-MIGRATION.md) for exact gates and limits.
+Not yet proven: a real browser wallet extension against live Mezo. Explorer source verification is **done** — see below. See [the implementation record](docs/MEZO-NATIVE-MIGRATION.md) for exact gates and limits.
 
 ## Live on Mezo Testnet
 

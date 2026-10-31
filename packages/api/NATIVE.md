@@ -309,10 +309,11 @@ the v2 copy is `.../verification/probe-report-v2-viem.json`.
   `personal_*`, `evm_*` and faucet methods are refused before a request is sent.
   There is no send/sign/permit method on the client at all.
 - **Not a wallet flow.** No transaction, signature, permit or faucet was used.
-- **Not source verification.** Bytecode *presence* was checked, nothing more.
-  Compiler metadata, constructor-baked immutables and library links mean the
-  deployed bytes will not equal a local artifact hash even for correct source.
-  **Explorer verification remains pending.**
+- **Not source verification.** The probe itself only checked bytecode *presence*.
+  Verification was done separately with `forge verify-contract`; the explorer now
+  reports `is_verified: true` (partial, metadata hash differs; compiled logic matches).
+  Compiler metadata and constructor-baked immutables still mean the deployed bytes
+  will not equal a local artifact hash even for correct source.
 - **Not a backfill.** Three pages of 400 blocks maximum from the deploy block.
   Absence of a log in that window is absence, not zero assertions.
 - **Not an indexer throughput measurement.** The 128-block reorg lookback and the
@@ -471,10 +472,13 @@ These are invariants, not measurements.
 
 Keep these attached to any status claim.
 
-- **Not source-verified.** `eth_getCode` proves bytecode is *present*, nothing
-  more. Compiler metadata, constructor-baked immutables and library links mean
-  deployed bytes will not equal a local artifact hash even for correct source.
-  **Explorer source verification remains pending.**
+- **Source-verified, flagged partial.** `forge verify-contract --verifier blockscout
+  --verifier-url https://api.explorer.test.mezo.org/api` published the source. The
+  explorer reports `is_verified: true` (18,405 bytes, 64-entry ABI) and
+  `is_partially_verified: true` because the metadata CBOR hash differs from the
+  deployed artifact, while `is_changed_bytecode: false` confirms the compiled logic
+  matches. Immutables are still constructor-baked, so a local artifact hash will not
+  equal deployed bytes.
 - **Not a public-deployment health claim.** Routes here are implemented in local
   source. This document is not evidence that a public deployment is healthy,
   current, or even running this revision. No SSA, uptime or "health" claim is

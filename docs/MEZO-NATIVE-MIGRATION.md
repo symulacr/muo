@@ -91,11 +91,11 @@ The read-only probe is **not** a wallet flow and **not** source verification. It
 These are real and unresolved. They are not scheduling notes.
 
 - **No real wallet and no live Mezo cycle.** Both browser proofs used a fake injected provider. No browser extension, no Passport, no WalletConnect and no permit path was exercised; the portal uses the exact-approve two-transaction flow. The uncertain-receipt flow is **not** covered in a real browser. Browser coverage is assert → dispute → resolve(2) plus the polling observation; uncontested settle, resolve(3) and resolve(4) remain local Anvil unit coverage only. No polling screenshots were produced; the dated `outputs/acceptance-20261028/browser-final.png` is from an older wrong-chain-guard run and is not current polling proof.
-- **No public deployment.** All public deployments are unchanged. The deployed portal is not a native wallet-to-indexer demo.
-- **Cron is deliberately disabled.** A bounded authenticated manual sync controller is required until an operator approves and measures scheduled ingestion. This is not automatic production indexing. Workers Free CPU (~10 ms) has not been measured against real backfill.
+- **Deployed.** The portal, landing site and API Worker are public on Mezo Testnet, and `0003_mezo_native_index` is applied to D1 `muo-testnet`.
+- **Cron is enabled** at `*/1 * * * *`, committed in `wrangler.jsonc`. Measured CPU on catch-up ticks spanning the full 500 blocks was 9–11 ms with `outcome: ok`. A bounded authenticated manual controller (`POST /v2/indexer/run`) remains available for backfills.
 - **Deep reorgs halt.** Common-ancestor recovery is bounded at 128 blocks; deeper or unresolved forks halt for operator action. No assumed Ethereum finality tags are used.
 - **Historical archive question is unresolved.** Contents/access of the historical Vercel secret archive and any potential key exposure remain operator follow-up. This is **not** solved.
-- **No source verification.** The deployed bytecode has not been verified against this source on the Mezo explorer.
+- **Source verification: published, flagged partial.** `forge verify-contract --verifier blockscout` submitted against `https://api.explorer.test.mezo.org/api`; the explorer reports `is_verified: true` with 18,405 bytes of source and the 64-entry ABI. It also reports `is_partially_verified: true` because the metadata CBOR hash differs from the deployed artifact, while `is_changed_bytecode: false` confirms the compiled logic matches on-chain bytecode. The mismatch is in source metadata, not behaviour.
 - **Scanning is not proof.** A clean Gitleaks scan does not prove historical archives were clean, inaccessible or never read.
 
 ## Release gates (all still open)

@@ -1,6 +1,15 @@
 import { describe, expect, test } from "bun:test";
 
-import { addChainToWallet, ensureChain, isUserRejection, readAccounts, readChainId, requestAccounts, watchMusd } from "@/lib/wallet-eip1193";
+import {
+  ACCOUNTS_TIMEOUT_MS,
+  addChainToWallet,
+  ensureChain,
+  isUserRejection,
+  readAccounts,
+  readChainId,
+  requestAccounts,
+  watchMusd,
+} from "@/lib/wallet-eip1193";
 import { FakeProvider, OTHER_ACCOUNT, TEST_ACCOUNT } from "@/test-support/fake-provider";
 
 /** Mezo testnet MUSD, lowercase as `config.ts` normalizes it. */
@@ -43,6 +52,25 @@ describe("EIP-1193 wallet primitives", () => {
     } catch (e) {
       expect(isUserRejection(e)).toBe(true);
     }
+  });
+
+  test("a wallet that never answers eth_requestAccounts is bounded, not hung", async () => {
+    // Regression: an installed-but-not-onboarded wallet never settles this promise, so the
+    // Connect button stayed on "Connecting ..." forever with no error and no way out.
+    const p = new FakeProvider({ accounts: [] });
+    p.queue("eth_requestAccounts", () => new Promise<never>(() => {}));
+    const started = Date.now();
+    await expect(requestAccounts(p, 120)).rejects.toThrow(/did not respond/i);
+    expect(Date.now() - started).toBeGreaterThanOrEqual(100);
+  });
+
+  test("the default bound is 30s, long enough for a slow but working approval", () => {
+    expect(ACCOUNTS_TIMEOUT_MS).toBe(30_000);
+  });
+
+  test("a wallet that answers before the bound is unaffected", async () => {
+    const p = new FakeProvider({ accounts: [TEST_ACCOUNT] });
+    expect(await requestAccounts(p, 5_000)).toEqual([TEST_ACCOUNT]);
   });
 
   test("ensureChain is a no-op when already on the target chain", async () => {

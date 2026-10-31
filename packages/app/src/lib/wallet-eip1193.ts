@@ -94,8 +94,23 @@ export const readAccounts = async (provider: Eip1193Provider): Promise<Address[]
   return out;
 };
 
-export const requestAccounts = async (provider: Eip1193Provider): Promise<Address[]> => {
-  const raw = await provider.request({ method: "eth_requestAccounts" });
+/**
+ * How long to wait for `eth_requestAccounts` before giving up.
+ *
+ * A wallet that is installed but NOT onboarded (no vault yet) never settles that
+ * promise: it waits for the user to finish setup in a popup they may never open.
+ * Without a bound the Connect button sat at "Connecting ..." forever with no error.
+ */
+export const ACCOUNTS_TIMEOUT_MS = 30_000;
+
+export const requestAccounts = async (provider: Eip1193Provider, timeoutMs = ACCOUNTS_TIMEOUT_MS): Promise<Address[]> => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const raw = await Promise.race([
+    provider.request({ method: "eth_requestAccounts" }),
+    new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error("The wallet did not respond. Finish setup or unlock it, then try again.")), timeoutMs);
+    }),
+  ]).finally(() => clearTimeout(timer));
   if (!Array.isArray(raw)) throw new Error("The wallet did not return an account.");
   const out: Address[] = [];
   for (const entry of raw) {

@@ -75,12 +75,17 @@ function WalletProvider({ children }: PropsWithChildren) {
   useEffect(() => discoverWallets((next) => setWallets(next)), []);
 
   const disconnect = useCallback(() => {
+    // Clear local state first so the UI never looks connected, then ask the wallet to drop
+    // the permission. Without the revoke, a reload silently restored the old session.
     setWalletId(null);
     setProvider(null);
     setAddress(null);
     setChainId(null);
     setError(null);
-  }, []);
+    void provider?.request({ method: "wallet_revokePermissions", params: [{ eth_accounts: {} }] })?.catch(() => {
+      // Wallets without EIP-2255 revoke simply ignore this; state is already cleared.
+    });
+  }, [provider]);
 
   const connect = useCallback(
     async (requestedId?: string) => {

@@ -102,7 +102,12 @@ export const resolveConfig = (): ConfigResult => {
 
   const rpcUrl = parseHttpUrl("NEXT_PUBLIC_MEZO_RPC_URL", readEnv(env.rpcUrl), network.rpcUrl, issues);
   const explorerUrl = parseHttpUrl("NEXT_PUBLIC_MEZO_EXPLORER_URL", readEnv(env.explorerUrl), network.explorerUrl, issues);
+  // The API base is REQUIRED: the localhost fallback only exists for local dev, and shipping
+  // it to production silently produced a portal that looked configured but could never read.
   const apiBaseUrl = parseHttpUrl("NEXT_PUBLIC_API_BASE_URL", readEnv(env.apiBaseUrl), "http://localhost:8787", issues);
+  if (readEnv(env.apiBaseUrl) === undefined && typeof window !== "undefined" && !/^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.hostname)) {
+    issues.push({ field: "NEXT_PUBLIC_API_BASE_URL", message: "NEXT_PUBLIC_API_BASE_URL is not configured" });
+  }
 
   const coreAddress = parseAddress("NEXT_PUBLIC_MUO_CORE_CONTRACT", readEnv(env.coreAddress), issues);
   const musdAddress = parseAddress("NEXT_PUBLIC_MUSD_ADDRESS", readEnv(env.musdAddress), issues);

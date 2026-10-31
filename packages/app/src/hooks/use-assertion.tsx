@@ -184,6 +184,10 @@ export const useSettleAssertion = (assertionId: Hex) => {
       tx.run(async () => {
         if (!provider || !address || !config) return { status: "failed", reason: "Wallet not connected." };
         const txCtx = ctxFor(provider, config, address);
+        // Gate on-chain: the row that offered this action came from the indexer and may lag.
+        const live = await readAssertionOnChain(txCtx, assertionId);
+        if (!live.exists) return { status: "failed", reason: "That assertion does not exist on-chain." };
+        if (live.status !== 0) return { status: "failed", reason: "That assertion is no longer open on-chain." };
         return submitCoreWrite(txCtx, {
           functionName: "settle",
           args: [assertionId],
@@ -209,6 +213,10 @@ export const useResolveAssertion = (assertionId: Hex) => {
       tx.run(async () => {
         if (!provider || !address || !config) return { status: "failed", reason: "Wallet not connected." };
         const txCtx = ctxFor(provider, config, address);
+        // Gate on-chain: only a DISPUTED assertion can be resolved, and the arbiter must be eligible.
+        const live = await readAssertionOnChain(txCtx, assertionId);
+        if (!live.exists) return { status: "failed", reason: "That assertion does not exist on-chain." };
+        if (live.status !== 1) return { status: "failed", reason: "That assertion is not disputed on-chain." };
         return submitCoreWrite(txCtx, {
           functionName: "resolve",
           args: [assertionId, RESOLVE_STATUS[result]],

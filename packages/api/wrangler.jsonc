@@ -54,12 +54,18 @@
     // with `wrangler secret put` (never as a var).
     "required": []
   },
-  // Scheduled indexing is DISABLED: there is no `triggers.crons` entry, so the
-  // `scheduled` handler is never invoked. The handler is implemented and
-  // bounded, but enabling it requires a measured CPU budget first (Workers Free
-  // grants ~10 ms CPU per Cron tick — a measurement gate, not a backfill
-  // budget). Until then, drive ingestion with the authenticated
-  // `POST /v2/indexer/run` controller in bounded slices.
+  // Scheduled indexing: one bounded cycle per minute.
+  //
+  // Rate math (measured 2026-10-31): Mezo Testnet produces ~14.4 blocks/min, so a
+  // 1-minute tick needs ~15 blocks of headroom against `maxBlocksPerRun` 500 — a
+  // ~34x margin. Hourly would need ~866 blocks/tick and would fall permanently
+  // behind; 5-minute and 15-minute ticks also clear, but leave 5-15 min of stale
+  // money state visible in the portal. Keep this in sync with the deployed
+  // schedule (`wrangler deployments`), because a deploy without this block
+  // REMOVES the trigger.
+  "triggers": {
+    "crons": ["*/1 * * * *"]
+  },
   "ratelimits": [
     {
       "name": "RATE_LIMITER",

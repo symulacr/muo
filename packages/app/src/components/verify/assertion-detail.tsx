@@ -71,7 +71,7 @@ export function NodeTrack({ assertion: a, currentBlock, detail }: { assertion: A
             </span>
             {detail && (
               <span className="font-medium text-[11px] capitalize leading-none">
-                {i === 2 && (a.status === "rejected" || a.status === "unresolved") ? a.status : name}
+                {i === 2 && (a.status === "rejected" || a.status === "unresolved" || a.status === "settled") ? a.status : name}
               </span>
             )}
             {detail && txs[i] && <TxLink hash={txs[i]} block={blocks[i] ?? null} />}

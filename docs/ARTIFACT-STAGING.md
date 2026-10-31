@@ -52,7 +52,7 @@ bun --no-env-file run verify:local
 
 Every step has a bounded timeout; a spawn error, signal, timeout or missing exit status is a failure, and the run stops at the first failing step with its name. There is no partial mode — a partial run is never a pass. `--list` prints the plan without executing it.
 
-The gate has a **recorded pass**: 17/17 steps, exit 0, 662 aggregate checks, 0 failed, with nine TypeScript configs, Biome clean (174 files) and both builds passing. Evidence is in `outputs/continuation-20261028/verification/`. Re-run it on the exact tree being staged, since any change invalidates the record.
+The gate has a **recorded pass**: 17/17 steps, exit 0, 674 aggregate checks, 0 failed, with nine TypeScript configs, Biome clean (174 files) and both builds passing. Evidence is in `outputs/continuation-20261028/verification/`. Re-run it on the exact tree being staged, since any change invalidates the record.
 
 `packages/www` has no unit suite; it is covered by TypeScript, lint and its production build, all of which the gate includes.
 
@@ -83,7 +83,7 @@ Local implementation being complete does not authorize a release.
 | Public wallet transaction | Explicit approval for any public-chain transaction. |
 | Cron enablement | Operator measurement of Workers CPU and backfill first. |
 
-No public production transaction or deployment is authorized by the local implementation phase. All public deployments remain unchanged.
+The contract, API Worker, portal and landing site are all deployed on Mezo Testnet. Any further deployment still requires explicit approval per action.
 
 ## Limits
 

@@ -181,11 +181,11 @@ argument (`address(0)` selects the testnet MUSD). Copy each `.env.example` befor
 
 ## Status and next steps
 
-- **Public baseline:** the contract, API and portal interface were deployed before this local migration. Those public deployments are unchanged and are not native wallet-to-indexer demos.
-- **Local state:** complete and recorded. `verify:local` passed as a single invocation — 17/17 steps, 662 aggregate checks, 0 failures. Per-suite counts: contracts 75, API 192, app 240, core 26, event-listener 12, integration 38, SDK 42, utils 9, plus 28 Node guard tests. Evidence and the machine-readable summary are in `outputs/continuation-20261028/verification/`.
-- **Deliberately disabled:** scheduled ingestion. A bounded authenticated manual sync controller is required until an operator approves and measures Workers CPU. This is not automatic production indexing.
-- **Remaining risks:** no real wallet extension or live Mezo cycle has been exercised; deep reorgs beyond 128 blocks halt for operator action; the historical Vercel secret archive question is unresolved; the deployed bytecode is not source-verified on the explorer.
-- **Releasing** requires reviewed Git source, a redacted Gitleaks artifact, a fresh public-environment build, and explicit approval per action. See [ARTIFACT-STAGING.md](docs/ARTIFACT-STAGING.md). No mainnet readiness is claimed.
+- **Deployed on Mezo Testnet:** contract (source-verified), API Worker, portal and landing site.
+- **Gate state:** `verify:local` passes as a single invocation — 17/17 steps, 674 aggregate checks, 0 failures. Per-suite counts: contracts 75, API 192, app 252, core 26, event-listener 12, integration 38, SDK 42, utils 9, plus 28 Node guard tests. Evidence is in `outputs/continuation-20261028/verification/`.
+- **Scheduled ingestion is enabled** at `*/1 * * * *` and bounded per tick. Measured catch-up ticks cost 9–11 ms CPU with `outcome: ok`.
+- **Remaining risks:** no signed transaction has been demonstrated with a real browser wallet extension — a real MetaMask was driven against the live portal and exposed a connect hang, since fixed, but onboarding a wallet is manual; deep reorgs beyond 128 blocks halt for operator action; the historical Vercel secret archive question is unresolved; and `resolve()` can strand both bonds if the owner is a party to a dispute while no other arbiter exists, which is why the operator must keep at least three arbiters.
+- **Releasing** further changes requires reviewed Git source, a redacted Gitleaks artifact, a fresh public-environment build, and explicit approval per action. See [ARTIFACT-STAGING.md](docs/ARTIFACT-STAGING.md). No mainnet readiness is claimed.
 - **Deploying the API yourself:** create your own D1 database and put its id in `packages/api/wrangler.jsonc`.
 
 ## License

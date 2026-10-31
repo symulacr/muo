@@ -224,10 +224,27 @@ byte-identical file.
   **not** modelled and are out of scope.
 - `CONTRACT_OWNER` is assumed honest. Owner-arbiter centralization is a known
   design property, not a bug this suite tests against.
-- **No claim is made** that the deployed bytecode at
-  `0x61c41cD7299fD668c3a7aAE62F12c017fE654Cb0` matches this source. That requires
-  an explorer/RPC verification step which has not been performed.
-- **No claim is made** that any Mezo testnet end-to-end wallet flow works.
+- **Residual lock risk (by design, not fixed).** `resolve()` requires an arbiter
+  who is neither the asserter nor the disputer (`MuoCore.sol:363,365`), the owner
+  is a permanent arbiter (`:157`, never removable per `:245`), and there is no
+  timeout or rescue path. So if the owner is a party to a dispute **and** no other
+  arbiter exists, both bonds are unrecoverable. The deployed contract is not in
+  that state: it has two arbiters, and assertion
+  `0xfba093682450639e57b4b6ce4f598e083d3ebe949d0f9a181f0e4b8f134199c8`
+  was resolved by the non-party arbiter at block 16380596. **Operational
+  invariant: keep at least three arbiters and never let the owner be a party.**
+  A future revision should add a permissionless `resolveAfterTimeout` that forces
+  a neutral 1x/1x refund.
+- Source verification **was** performed: `forge verify-contract --verifier
+  blockscout --verifier-url https://api.explorer.test.mezo.org/api`. The explorer
+  reports `is_verified: true` with 18,405 bytes of source and the 64-entry ABI,
+  and flags it partially verified because only the metadata CBOR hash differs;
+  `is_changed_bytecode: false` confirms the compiled logic matches the deployed
+  bytecode.
+- **No claim is made** that any Mezo testnet end-to-end wallet flow works. A real
+  MetaMask extension was loaded and driven against the live portal; it exposed a
+  connect hang that has since been fixed, but onboarding a fresh wallet is a
+  manual step and no signed transaction has been demonstrated.
 
 ## Related: local EVM integration harness
 

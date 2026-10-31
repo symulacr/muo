@@ -11,7 +11,7 @@ Local implementation status after the completed written audit. This is **not** a
 
 ## Local implementation: complete
 
-The local Mezo-native implementation is finished and gated. The public production deployments are **unchanged**.
+The Mezo-native implementation is finished, gated and deployed to Mezo Testnet.
 
 | Component | Local change | Final local gate |
 |---|---|---|
@@ -22,7 +22,7 @@ The local Mezo-native implementation is finished and gated. The public productio
 | Native portal | EIP-1193/EIP-6963 discovery, bounded approvals, native transactions/receipts, strict v2 API reads, exact units, active-view polling (5 s, client observer only) | 240 tests across 18 files, including real-Anvil and harness tests; both app TypeScript configs passed; production webpack build passed |
 | Native indexing | Compiler-ABI decoder, guarded atomic ledger/projection/cursor, unique CAS witnesses, completed-range cursors, bounded common-ancestor reorg recovery, native GET `Cache-Control: no-store` | 192 API tests; TypeScript passed; minified Workers runtime passed. Probe revision v2 (viem ABI) adds 15 offline ABI tests and 29 read-only-safety tests |
 | Native SDK | Default compiler-ABI viem decoder with strict payload, ID and provenance checks | 42 tests; TypeScript passed |
-| Event listener | Native authenticated manual sync controller; scheduled ingestion deliberately disabled | 12 tests; TypeScript passed |
+| Event listener | Native authenticated sync controller; scheduled ingestion enabled at */1 * * * * | 12 tests; TypeScript passed |
 | Landing site | Existing design preserved | No unit suite; TypeScript, lint and production webpack build passed |
 | Artifact staging | Allowlisted Git-tracked source staging, mandatory redacted scanner, manifest; rejects real env/key files and symlinks | 7 Node tests passed |
 | Workspace verification | Serial Node runner disables Bun environment autoload, uses every child exit status, and fails on a missing test script instead of skipping a package. `verify:local` packages the whole local gate into one command | 5 runner tests, plus 16 verifier tests = **28 Node guard tests**; wired into the root `test` script |
@@ -32,8 +32,8 @@ The local Mezo-native implementation is finished and gated. The public productio
 
 `bun --no-env-file run verify:local` — **17/17 steps PASS, exit 0**. Evidence: `outputs/continuation-20261028/verification/final-gate.log` and `gate-summary.json`.
 
-- **634 workspace/contract tests** plus **28 Node guard tests** = **662 total, 0 failed.**
-- Per suite: contracts 75, API 192, app 240, core 26, event-listener 12, integration 38, SDK 42, utils 9. `packages/www` has no unit suite and is covered by TypeScript, lint and its production build.
+- **646 workspace/contract tests** plus **28 Node guard tests** = **674 total, 0 failed.**
+- Per suite: contracts 75, API 192, app 252, core 26, event-listener 12, integration 38, SDK 42, utils 9. `packages/www` has no unit suite and is covered by TypeScript, lint and its production build.
 - All **nine** TypeScript configs pass: api, app, app.test, core, event-listener, integration, sdk, utils, www.
 - Biome over the repo: **174 files, exit 0, zero errors and zero warnings.**
 - Both `app` and `www` production webpack builds passed.
@@ -102,7 +102,7 @@ These are real and unresolved. They are not scheduling notes.
 
 Local implementation being complete does **not** authorize a release. Each item below is a separate human decision.
 
-0. **Local gate.** `bun --no-env-file run verify:local` must pass as a single invocation on the exact tree being staged. It runs a frozen-install preflight, the workspace suites, the guard tests, nine TypeScript configs, Biome, the Workers runtime test, both production builds and `bun audit`, and it checks the protected hashes and ABI shape first. It starts no servers and performs no deploy, Git or secret operation. **Recorded pass:** 17/17 steps, exit 0, 662 aggregate checks, 0 failed (`outputs/continuation-20261028/verification/`). Re-run it on the exact tree being staged.
+0. **Local gate.** `bun --no-env-file run verify:local` must pass as a single invocation on the exact tree being staged. It runs a frozen-install preflight, the workspace suites, the guard tests, nine TypeScript configs, Biome, the Workers runtime test, both production builds and `bun audit`, and it checks the protected hashes and ABI shape first. It starts no servers and performs no deploy, Git or secret operation. **Recorded pass:** 17/17 steps, exit 0, 674 aggregate checks, 0 failed (`outputs/continuation-20261028/verification/`). Re-run it on the exact tree being staged.
 1. **Reviewed Git source.** New source files must be reviewed and added to Git by a human. Release staging refuses eligible untracked source. No `git add`, commit, push or artifact staging was performed.
 2. **Mandatory redacted scanner artifact.** A fresh, fully redacted Gitleaks CLI report must accompany the staged source. See [ARTIFACT-STAGING.md](ARTIFACT-STAGING.md).
 3. **Fresh public-environment build.** Build the staged source with the real public configuration, not fixture values baked into a browser bundle.
